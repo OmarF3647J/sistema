@@ -189,8 +189,7 @@ Route::get('/selvaelmarinero', [SitioController::class, 'mostrarCentro'])->name(
 
 
 Route::get('/dashboard', function () {
-    // 1. Preparamos valores por defecto (vacíos o en cero)
-    $data = [
+    return Inertia::render('Dashboard', [
         'centrosturist' => [],
         'guiasturist' => [],
         'centrosturist_count' => 0,
@@ -198,30 +197,8 @@ Route::get('/dashboard', function () {
         'actividadturist' => 0,
         'serviciosturist' => 0,
         'producto' => 0,
-    ];
-
-    // 2. Intentamos consultar la base de datos de forma segura
-    try {
-        $data['centrosturist'] = \App\Models\Centrosturist::with('actividadturist')->get();
-        $data['centrosturist_count'] = \App\Models\Centrosturist::count();
-    } catch (\Exception $e) {
-        // Si falla (ej. no existe la tabla o relación), lo ignoramos silenciosamente
-    }
-
-    try {
-        $data['guiasturist'] = \App\Models\Guiasturist::with('actividadturist')->get();
-        $data['guiasturist_count'] = \App\Models\Guiasturist::count();
-    } catch (\Exception $e) {
-    }
-
-    try { $data['actividadturist'] = \App\Models\Actividadturist::count(); } catch (\Exception $e) {}
-    try { $data['serviciosturist'] = \App\Models\Serviciosturist::count(); } catch (\Exception $e) {}
-    try { $data['producto'] = \App\Models\Producto::count(); } catch (\Exception $e) {}
-
-    // 3. Enviamos la información al componente de Vue
-    return Inertia::render('Dashboard', $data);
-
-})->middleware(['auth', 'verified'])->name('dashboard');
+    ]);
+})->name('dashboard'); // ¡Candado eliminado!
 
 
 Route::middleware('auth')->group(function () {
@@ -250,4 +227,4 @@ Route::middleware('auth')->group(function () {
 
 });
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
