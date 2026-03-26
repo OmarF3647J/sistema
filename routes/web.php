@@ -190,15 +190,17 @@ Route::get('/selvaelmarinero', [SitioController::class, 'mostrarCentro'])->name(
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
-        'centrosturist' => [],
-        'guiasturist' => [],
-        'centrosturist_count' => 0,
-        'guiasturist_count' => 0,
-        'actividadturist' => 0,
-        'serviciosturist' => 0,
-        'producto' => 0,
+        // colección con relaciones para usar en la gráfica
+        'centrosturist' => App\Models\Centrosturist::with('actividadturist')->get(),
+        'guiasturist' => App\Models\Guiasturist::with('actividadturist')->get(),
+        // conteos para mostrar en los cards (números simples)
+        'centrosturist_count' => App\Models\Centrosturist::count(),
+        'guiasturist_count' => App\Models\Guiasturist::count(),
+        'actividadturist' => App\Models\Actividadturist::count(),
+        'serviciosturist' => App\Models\Serviciosturist::count(),
+        'producto' => App\Models\Producto::count(),
     ]);
-})->name('dashboard'); // ¡Candado eliminado!
+})->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
@@ -227,4 +229,4 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';
